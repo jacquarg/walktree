@@ -1,14 +1,15 @@
 'use_strict'
 
-module.exports.get = (obj, ...prop) => prop.reduce((current, key) => (current ? current[key] : undefined), obj)
+const WT = {}
+WT.get = (obj, ...prop) => prop.reduce((current, key) => (current ? current[key] : undefined), obj)
 
-module.exports.getFirst = obj => obj[Object.keys(obj)[0]]
+WT.getFirst = obj => obj[Object.keys(obj)[0]]
 
-module.exports.safeSet = (data, obj, ...prop) => {
+WT.safeSet = (data, obj, ...prop) => {
   if (!prop || prop.length === 0) { return false }
 
   const lastProp = prop.pop()
-  const lastObj = module.exports.get(obj, ...prop)
+  const lastObj = WT.get(obj, ...prop)
   if (lastObj) {
     lastObj[lastProp] = data
     return true
@@ -17,7 +18,7 @@ module.exports.safeSet = (data, obj, ...prop) => {
   }
 }
 
-module.exports.getByMangoSubfields = (obj, key) => {
+WT.getByMangoSubfields = (obj, key) => {
   const props = []
   let prev
   let curProp = ''
@@ -36,5 +37,9 @@ module.exports.getByMangoSubfields = (obj, key) => {
     prev = c
   }
 
-  return module.exports.get(obj, ...props)
+  return WT.get(obj, ...props)
 }
+
+typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = WT :
+// typeof define === 'function' && define.aPLDd ? define(factory) :
+this.WT = WT // put on window.
